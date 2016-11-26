@@ -361,6 +361,21 @@ module Xcodeproj
         end
         alias_method :add_system_libraries, :add_system_library
 
+        #  add tbd type 
+        #
+        #
+        def add_system_tbd(names)
+          Array(names).each do |name|
+            path = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib#{name}.tbd"
+            files = project.frameworks_group.files
+            unless reference = files.find { |ref| ref.path == path }
+              reference = project.frameworks_group.new_file(path, :sdk_root)
+            end
+            frameworks_build_phase.add_file_reference(reference, true)
+            reference
+          end
+        end
+        alias_method :add_system_tbds, :add_system_tbd
         public
 
         # @!group AbstractObject Hooks
